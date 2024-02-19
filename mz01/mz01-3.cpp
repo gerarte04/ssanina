@@ -1,14 +1,14 @@
 #include <iostream>
 
+// 7/10 тестов
+
 int main()
 {
     char c = std::cin.get();
     char prev = c;
     bool is_num = false;
 
-    do {
-        c = std::cin.get();
-
+    while ((c = std::cin.get()) != EOF) {
         if (isdigit(prev)) {
             if (prev != '0') {
                 is_num = true;
@@ -22,7 +22,11 @@ int main()
         }
 
         prev = c;
-    } while (c != EOF);
+    }
+
+    if (prev != EOF) {
+        std::cout << prev;
+    }
 
     return 0;
 }
