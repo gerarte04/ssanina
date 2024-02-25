@@ -1,14 +1,12 @@
 #include <iostream>
 
-// 7/10 тестов
-
 int main()
 {
-    char c = std::cin.get();
+    char c = getc(stdin);
     char prev = c;
     bool is_num = false;
 
-    while ((c = std::cin.get()) != EOF) {
+    while ((c = getc(stdin)) != EOF) {
         if (isdigit(prev)) {
             if (prev != '0') {
                 is_num = true;
