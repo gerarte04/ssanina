@@ -3,20 +3,15 @@
 class A
 {
     int x;
-    bool print;
+    bool print{};
 public:
-    A() : print(true) { std::cin >> x; }
+    A() { std::cin >> x; }
 
-    A(A &a)
+    A(const A &a)
     {
         std::cin >> x;
         x += a.x;
-        a.unprint();
-    }
-
-    void unprint()
-    {
-        print = false;
+        print = true;
     }
 
     ~A()
