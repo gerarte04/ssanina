@@ -1,23 +1,48 @@
-#include <string>
+#include <iostream>
 
-class BinaryNumber
-{
-    std::string n;
+class Row {
+    int m[3] = {};
 public:
-    BinaryNumber(const std::string &s = "0") { n = s; }
-    operator std::string() const { return n; }
-    const BinaryNumber & operator++ ()
+    int & operator[] (int i)
     {
-        for (int i = n.size() - 1; i >= 0; i--) {
-            if (n[i] == '0') {
-                n[i] = '1';
-                return *this;
-            } else {
-                n[i] = '0';
-            }
-        }
-
-        n.insert(n.begin(), '1');
-        return *this;
+        return m[i];
+    }
+    
+    int * begin() {
+        return &m[0];
+    }
+    int * end() {
+        return &m[2];   
     }
 };
+
+class Matrix
+{
+    Row rows[3];
+public:
+    int & operator[] (int i, int j)
+    {
+        return rows[i][j];
+    }
+    
+    Row * begin() const {
+        return &rows[0];   
+    }
+    
+    Row * end() const {
+        return &rows[2];   
+    }
+};
+
+int main()
+{
+   Matrix m;
+   m[1, 1] = 5;
+
+   for (const auto &row : m) {
+        for (auto cell : row) {
+            std::cout << cell << " ";
+        }
+        std::cout << "\n";
+   }
+}
