@@ -1,48 +1,18 @@
-#include <iostream>
-
-class Row {
-    int m[3] = {};
-public:
-    int & operator[] (int i)
-    {
-        return m[i];
-    }
-    
-    int * begin() {
-        return &m[0];
-    }
-    int * end() {
-        return &m[2];   
-    }
-};
-
 class Matrix
 {
-    Row rows[3];
-public:
-    int & operator[] (int i, int j)
+    class Row
     {
-        return rows[i][j];
-    }
+        int * const r = new int[3];
+    public:
+        ~Row() { delete[] r; }
+        int & operator[] (int i) const { return r[i]; }
+        int * begin() const { return r; }
+        int * end() const { return r + 3; }
+    };
     
-    Row * begin() const {
-        return &rows[0];   
-    }
-    
-    Row * end() const {
-        return &rows[2];   
-    }
+    const Row m[3];
+public:
+    int & operator[] (int i, int j) { return m[i][j]; }
+    const Row * begin() { return m; }
+    const Row * end() { return m + 3; }
 };
-
-int main()
-{
-   Matrix m;
-   m[1, 1] = 5;
-
-   for (const auto &row : m) {
-        for (auto cell : row) {
-            std::cout << cell << " ";
-        }
-        std::cout << "\n";
-   }
-}
