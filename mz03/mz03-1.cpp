@@ -22,8 +22,8 @@ namespace numbers {
         double abs() const { return sqrt(abs2()); }
         std::string to_string() const {
             std::ostringstream stream1, stream2;
-            stream1 << std::fixed << std::showpoint << std::setprecision(10) << r;
-            stream2 << std::fixed << std::showpoint << std::setprecision(10) << i;
+            stream1 << std::setprecision(10) << r;
+            stream2 << std::setprecision(10) << i;
             return "(" + stream1.str() + "," + stream2.str() + ")";
         }
         complex & operator+= (const complex &a)
@@ -40,14 +40,16 @@ namespace numbers {
         }
         complex & operator*= (const complex &a)
         {
-            r = r * a.r - i * a.i;
+            double new_r = r * a.r - i * a.i;
             i = r * a.i + i * a.r;
+            r = new_r;
             return *this;
         }
         complex & operator/= (const complex &a)
         {
-            r = (r * a.r + i * a.i) / a.abs2();
+            double new_r = (r * a.r + i * a.i) / a.abs2();
             i = (i * a.r - r * a.i) / a.abs2();
+            r = new_r;
             return *this;
         }
         friend complex operator+ (const complex &a, const complex &b)
@@ -71,7 +73,7 @@ namespace numbers {
         friend complex operator/ (const complex &a, const complex &b)
         {
             complex c(a.re(), a.im());
-            c += b;
+            c /= b;
             return c;
         }
         complex operator- () const { return complex(-r, -i); }
