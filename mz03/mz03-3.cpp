@@ -4,58 +4,47 @@
 #include <functional>
 
 namespace numbers {
-    std::map<char, std::function<void()>> opers = {
-        '+': [complex_stack & st](std::string s) {st << complex(s);}
-    }
-    complex eval(const std::Vector<std::string> &args, const complex &z)
+    std::map<char, std::function<void(complex_stack &, const std::string &, const complex &)>> opers = {
+        { '(', [](complex_stack &st, const std::string &arg, const complex &z) { st << complex(arg); } },
+        { 'z', [](complex_stack &st, const std::string &arg, const complex &z) { st << complex(z.re(), z.im()); } },
+        { '!', [](complex_stack &st, const std::string &arg, const complex &z) { st << +st; } },
+        { ';', [](complex_stack &st, const std::string &arg, const complex &z) { ~st; } },
+        { '~', [](complex_stack &st, const std::string &arg, const complex &z) {
+            complex c = +st;
+            ~st;
+            st << ~c;
+        } },
+        { '#', [](complex_stack &st, const std::string &arg, const complex &z) {
+            complex c = +st;
+            ~st;
+            st << -c;
+        } },
+        { '+', [](complex_stack &st, const std::string &arg, const complex &z) {
+            complex d = +st, c = +st;
+            st << c + d;
+        } },
+        { '-', [](complex_stack &st, const std::string &arg, const complex &z) {
+            complex d = +st, c = +st;
+            st << c - d;
+        } },
+        { '*', [](complex_stack &st, const std::string &arg, const complex &z) {
+            complex d = +st, c = +st;
+            st << c * d;
+        } },
+        { '/', [](complex_stack &st, const std::string &arg, const complex &z) {
+            complex d = +st, c = +st;
+            st << c / d;
+        } }
+    };
+
+    complex eval(const std::vector<std::string> &args, const complex &z)
     {
         complex_stack st;
-        for (std::string s : args) {
-            complex c, d;
-            switch (s[0]) {
-            case '(':
-                st << complex(s);
-                break;
-            case 'z':
-                st << complex(z.re(), z.im());
-                break;
-            case '!':
-                st << +st;
-                break;
-            case ';':
-                ~st;
-                break;
-            case '~':
-                c = +st;
-                ~st;
-                st << ~c;
-                break;
-            case '#':
-                c = +st;
-                ~st;
-                st << -c;
-                break;
-            case '+':
-                d = +st;
-                c = +st;
-                st << c + d;
-                break;
-            case '-':
-                d = +st;
-                c = +st;
-                st << c - d;
-                break;
-            case '*':
-                d = +st;
-                c = +st;
-                st << c * d;
-                break;
-            case '/':
-                d = +st;
-                c = +st;
-                st << c / d;
-                break;
-            }
+
+        for (const std::string &s : args) {
+            opers[s[0]](st, s, z);
         }
+
+        return +st;
     }
 }
