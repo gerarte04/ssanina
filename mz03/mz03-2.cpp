@@ -1,108 +1,69 @@
 namespace numbers {
+    constexpr int DFL_CAP = 16;
+    
     class complex_stack
     {
-        struct elem
-        {
-            complex el;
-            elem *next;
-        };
-        
-        size_t sz = 0;
-        elem *st = nullptr;
+        size_t sz;
+        size_t cap;
+        complex *arr = nullptr;
     public:
-        complex_stack() { }
-        complex_stack(const complex_stack &stack)
+        complex_stack(size_t cap = DFL_CAP, size_t sz = 0) : sz(sz), cap(cap), arr(new complex[cap]) { }
+        complex_stack(const complex_stack &stack) : sz(stack.sz), cap(stack.cap)
         {
-            sz = stack.sz;
-            elem *source = stack.st;
-            elem *copy = nullptr;
+            delete[] arr;
+            arr = new complex[cap];
 
-            if (source != nullptr) {
-                copy = new elem;
-            }
-
-            st = copy;
-
-            while (source != nullptr) {
-                copy->el = source->el;
-                copy->next = nullptr;
-
-                source = source->next;
-
-                if (source != nullptr) {
-                    copy->next = new elem;
-                    copy = copy->next;
-                }
+            for (size_t i = 0; i < sz; i++) {
+                arr[i] = stack.arr[i];
             }
         }
-        complex_stack & operator= (const complex_stack &stack)
+        complex_stack & operator=(const complex_stack &stack)
         {
             sz = stack.sz;
-            elem *source = stack.st;
-            elem *copy = nullptr;
+            cap = stack.cap;
+            
+            delete[] arr;
+            arr = new complex[cap];
 
-            if (source != nullptr) {
-                copy = new elem;
-            }
-
-            st = copy;
-
-            while (source != nullptr) {
-                copy->el = source->el;
-                copy->next = nullptr;
-
-                source = source->next;
-
-                if (source != nullptr) {
-                    copy->next = new elem;
-                    copy = copy->next;
-                }
+            for (size_t i = 0; i < sz; i++) {
+                arr[i] = stack.arr[i];
             }
 
             return *this;
         }
         ~complex_stack()
         {
-            elem *temp, *cur = st;
-
-            while (cur != nullptr) {
-                temp = cur->next;
-                delete cur;
-                cur = temp;
-            }
+            delete[] arr;
         }
         size_t size() const { return sz; }
         const complex operator[] (size_t i) const
         {
-            elem *temp = st;
-
-            for (i++; i < sz; i++) {
-                temp = temp->next;
-            }
-
-            return temp->el;
+            return arr[i];
         }
         complex_stack operator<< (const complex &a) const
         {
-            complex_stack new_st = *this;
-            elem *new_elem = new elem;
-            new_elem->el = a;
-            new_elem->next = new_st.st;
-            new_st.st = new_elem;
-            new_st.sz++;
+            complex_stack new_st = (sz == cap) ? complex_stack(cap * 2, sz) : complex_stack(cap, sz);
+            
+            for (size_t i = 0; i < sz; i++) {
+                new_st.arr[i] = arr[i];
+            }
+
+            new_st.arr[new_st.sz++] = a;
+            
             return new_st;
         }
         complex operator+ () const
         {
-            return st->el;
+            return arr[sz - 1];
         }
         complex_stack operator~ () const
         {
-            complex_stack new_st = *this;
-            elem *new_top = new_st.st->next;
-            delete new_st.st;
-            new_st.st = new_top;
-            new_st.sz--;
+            complex_stack new_st = (sz - 1 <= cap / 2 && cap > DFL_CAP) ? complex_stack(cap / 2, sz - 1) : complex_stack(cap, sz - 1);
+            
+            for (size_t i = 0; i < new_st.sz; i++) {
+                new_st.arr[i] = arr[i];
+            }
+
             return new_st;
         }
     };
