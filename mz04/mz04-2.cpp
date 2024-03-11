@@ -1,34 +1,18 @@
-#include <algorithm>
 #include <vector>
-#include <numeric>
 #include <iostream>
 
-class Arena
+void process(std::vector<long> &v, long threshold)
 {
-    std::size_t len;
-    Item *mem;
-    std::vector<bool> free;
-    int cnt_free;
-public:
-    explicit Arena(std::size_t size) :
-        len(size / sizeof(Item)), mem(new Item[len]),
-        free(std::vector<bool>(len, true)), cnt_free(len) { }
-    ~Arena() { delete[] mem; }
-    Item * get()
-    {
-        if (!cnt_free) {
-            return nullptr;
+    int len = v.size();
+    auto it = v.begin();
+
+    while (it != v.begin() + len) {
+        int dist = std::distance(v.begin(), it);
+
+        if (*it >= threshold) {
+            v.insert(v.begin() + len, *it);
         }
 
-        cnt_free--;
-
-        auto block_it = std::find(free.begin(), free.end(), true);
-        *block_it = false;
-        return &mem[block_it - free.begin()];
+        it = v.begin() + dist + 1;
     }
-    void put(Item *i)
-    {
-        free[i - mem] = true;
-        cnt_free++;
-    }
-};
+}
