@@ -1,5 +1,4 @@
 #include <vector>
-#include <iostream>
 
 void process(std::vector<long> &v, long threshold)
 {

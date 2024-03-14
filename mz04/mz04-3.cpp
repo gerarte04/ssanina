@@ -1,6 +1,5 @@
-#include <vector>
-#include <iostream>
 #include <algorithm>
+#include <vector>
 
 void process(const std::vector<int> &v1, std::vector<int> &v2)
 {

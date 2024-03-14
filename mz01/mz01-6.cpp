@@ -35,6 +35,13 @@ public:
     CrossInfo get_cross_info(const Line &) const;
 };
 
+bool comp_double(double a, double b)
+{
+    static constexpr double EPS = 1e-6;
+    double diff = a - b;
+    return (diff < EPS) && (-diff < EPS);
+}
+
 Line::Line(const Point &p1, const Point &p2)
 {
     is_vertical = p1.x == p2.x;
@@ -53,7 +60,7 @@ CrossInfo Line::get_cross_info(const Line &l1) const
 
     if (is_vertical) {
         if (l1.is_vertical) {
-            if (x_off == l1.x_off) {
+            if (comp_double(x_off, l1.x_off)) {
                 ci.st = Equal;
             } else {
                 ci.st = Parallel;
@@ -71,8 +78,8 @@ CrossInfo Line::get_cross_info(const Line &l1) const
         ci.x_cr = l1.x_off;
         ci.y_cr = k * l1.x_off + b;
         return ci;
-    } else if (k == l1.k) {
-        if (b == l1.b) {
+    } else if (comp_double(k, l1.k)) {
+        if (comp_double(b, l1.b)) {
             ci.st = Equal;
         } else {
             ci.st = Parallel;

@@ -3,6 +3,8 @@
 #include <numeric>
 #include <iostream>
 
+// не тестил
+
 class Arena
 {
     std::size_t len;

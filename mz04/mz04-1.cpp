@@ -1,5 +1,4 @@
 #include <vector>
-#include <iostream>
 
 void process(
     const std::vector<unsigned long> &v1,
