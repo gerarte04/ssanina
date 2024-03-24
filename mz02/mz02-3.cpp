@@ -15,7 +15,7 @@ int main()
 
     auto print_seq = [&seq, &len]() {
         if (len <= MAX_NOCODE && seq != '#') {
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; i < len; ++i) {
                 std::cout << seq;
             }
         } else {
@@ -30,7 +30,7 @@ int main()
         }
 
         seq = c;
-        len++;
+        ++len;
     }
 
     print_seq();

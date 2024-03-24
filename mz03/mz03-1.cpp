@@ -6,8 +6,8 @@
 namespace numbers {
     class complex
     {
-        double r;
-        double i;
+        double r{};
+        double i{};
     public:
         complex(double x = 0.0, double y = 0.0) : r(x), i(y) { }
         explicit complex(std::string s)
@@ -76,8 +76,6 @@ namespace numbers {
             c /= b;
             return c;
         }
-        complex operator- () const { return complex(-r, -i); }
-        complex operator~ () const { return complex(r, -i); }
         complex & operator= (const complex &obj)
         {
             r = obj.r;
@@ -85,4 +83,7 @@ namespace numbers {
             return *this;
         }   
     };
+
+    complex operator- (const complex &c) { return complex(-c.re(), -c.im()); }
+    complex operator~ (const complex &c) { return complex(c.re(), -c.im()); }
 }
