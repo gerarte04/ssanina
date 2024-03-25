@@ -8,7 +8,7 @@ T myfilter(const T &v, std::function<bool(typename T::value_type)> func)
 
     for (it = v.begin(); it != v.end(); ++it) {
         if (func(*it)) {
-            v2.push_back(*it);
+            v2.insert(v2.end(), *it);
         }
     }
 
