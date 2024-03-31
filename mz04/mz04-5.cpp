@@ -12,7 +12,7 @@ int main()
 
     while (std::cin >> x) {
         if (x < 0) {
-            if (-x > static_cast<int>(l.size()) && l.size() != 0) {
+            if (-x <= (int) l.size()) {
                 auto it = l.begin();
                 
                 for (x++; x < 0; x++) {
@@ -25,7 +25,7 @@ int main()
             int y;
             std::cin >> y;
             
-            if (x > static_cast<int>(l.size())) {
+            if (x > (int) l.size()) {
                 l.push_back(y);
             } else {
                 auto it = l.begin();
