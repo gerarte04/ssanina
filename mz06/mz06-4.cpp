@@ -1,11 +1,9 @@
-#include <vector>
 #include <algorithm>
-#include <iostream>
+#include <vector>
 
 template <class T, class K>
 K myremove(T abegin, T aend, K vbegin, K vend)
 {
-    typename T::difference_type dist = std::distance(vbegin, vend);
     std::vector<typename T::value_type> copy(abegin, aend);
     std::sort(copy.begin(), copy.end());
     auto it_end = std::unique(copy.begin(), copy.end());
@@ -22,28 +20,11 @@ K myremove(T abegin, T aend, K vbegin, K vend)
         }
 
         if (i == *it - off) {
-            std::remove(vbegin, vend, *el_it);
+            std::remove_if(vbegin, vend, [el_it](const typename K::value_type &a) { return &a == &(*el_it); });
             ++off;
-            --dist;
+            --vend;
         }
     }
 
-    vend = vbegin;
-    for (int i = 0; i < dist; i++) {
-        vend++;
-    }
-
-    for (auto it = vbegin; it != vend; it++) {
-        std::cout << *it << std::endl;
-    }
-
     return vend;
-}
-
-int main() {
-    std::vector<int> nums = { 0, 1, 2, 3, 4, 5 };
-    std::vector<int> del = { 0, 5, 5, 4 };
-
-    auto it = myremove(del.begin(), del.end(), nums.begin(), nums.end());
-    std::cout << *(--it) << std::endl;
 }
