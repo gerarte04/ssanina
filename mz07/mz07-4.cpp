@@ -1,4 +1,7 @@
 #include <iostream>
+
+// хуйня
+
 namespace Game {
     template <typename T>
     class Coord

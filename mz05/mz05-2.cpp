@@ -28,8 +28,8 @@ int main()
         gpas[name] += mark;
     }
 
-    for (auto it = gpas.begin(); it != gpas.end(); it++) {
-        std::cout << it->first << ' ' << it->second.get() << std::endl;
+    for (const auto &pair : gpas) {
+        std::cout << pair.first << ' ' << pair.second.get() << std::endl;
     }
 
     return 0;

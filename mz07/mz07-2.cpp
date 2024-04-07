@@ -4,7 +4,7 @@
 
 class Rectangle : public Figure
 {
-    double a, b;
+    double a{}, b{};
 public:
     Rectangle(double a, double b) : a(a), b(b) { }
     static Rectangle* make(const std::string &s)
@@ -22,7 +22,7 @@ public:
 
 class Square : public Figure
 {
-    double a;
+    double a{};
 public:
     Square(double a) : a(a) { }
     static Square* make(const std::string &s)
@@ -37,7 +37,7 @@ public:
 
 class Circle : public Figure
 {
-    double r;
+    double r{};
 public:
     Circle(double r) : r(r) { }
     static Circle* make(const std::string &s)
