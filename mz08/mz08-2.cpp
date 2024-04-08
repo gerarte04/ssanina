@@ -5,17 +5,17 @@ class Result
 {
     long res;
 public:
-    Result(long r) : res(r) { throw *this; }
+    Result(long r) : res(r) { }
     long get() const { return res; }
 };
 
 void func(long a, long b, unsigned int k)
 {
     if (k == 0) {
-        Result res(a + b);
+        throw Result(a + b);
     }
     if (b == 1) {
-        Result res(a);
+        throw Result(a);
     }
 
     try {

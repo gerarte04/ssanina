@@ -6,12 +6,7 @@ class Printer
 {
     std::string s{};
 public:
-    Printer()
-    {
-        if (!(std::cin >> s)) {
-            throw std::exception();
-        }
-    }
+    Printer(const std::string &s) : s(s) { }
     ~Printer()
     {
         std::cout << s << std::endl;
@@ -20,7 +15,13 @@ public:
 
 void process()
 {
-    Printer p;
+    std::string s;
+
+    if (!(std::cin >> s)) {
+        throw std::exception();
+    }
+
+    Printer p(s);
     process();
 }
 
@@ -28,8 +29,7 @@ int main()
 {
     try {
         process();
-    }
-    catch (const std::exception&) { }
+    } catch (const std::exception&) { }
 
     return 0;
 }
