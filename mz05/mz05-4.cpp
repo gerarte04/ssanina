@@ -16,15 +16,14 @@ int main()
         std::cin >> r >> c >> v;
     }
 
-    while (std::cin >> r) {
-        std::cin >> c >> v;
+    while (std::cin >> r >> c >> v) {
         mtx[std::make_pair(r, c)] += v % MOD;
         mtx[std::make_pair(r, c)] %= MOD;
     }
 
-    for (auto it = mtx.begin(); it != mtx.end(); it++) {
-        if (it->second != 0) {
-            std::cout << it->first.first << ' ' << it->first.second << ' ' << it->second << std::endl;
+    for (const auto &[cell, val]: mtx) {
+        if (val != 0) {
+            std::cout << cell.first << ' ' << cell.second << ' ' << val << std::endl;
         }
     }
 

@@ -1,1 +1,0 @@
-/opt/ejudge/bin/ejudge-fuse --user s02220056 --url https://unicorn.ejudge.ru/cgi-bin/ ~/contest -o use_ino

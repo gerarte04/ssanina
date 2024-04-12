@@ -1,7 +1,3 @@
-#include <iostream>
-
-// хуйня
-
 namespace Game {
     template <typename T>
     class Coord
@@ -22,21 +18,22 @@ namespace Game {
     template <typename T>
     typename Coord<T>::value_type dist(Coord<T> range, Coord<T> a, Coord<T> b)
     {
-        typename Coord<T>::value_type diff_x = diff(a.col, b.col);
+        auto diff_x = diff(a.col, b.col), diff_y = diff(a.row, b.row), sub_y = 0;
 
-        if ((a.col & 1 && a.row < b.row) || (!(a.col & 1) && a.row > b.row)) {
-            return diff_x + diff(a.row, b.row) - diff_x / 2;
-        } else if ((!(a.col & 1) && a.row < b.row) || (a.col & 1 && a.row > b.row)) {
-            return diff_x + diff(a.row, b.row) - (diff_x + 1) / 2;
+        if (a.row == b.row) {
+            return diff_x;
+        }
+
+        if ((a.col & 1) ^ (a.row > b.row)) {
+            sub_y = diff_x / 2;
+        } else {
+            sub_y = (diff_x + 1) / 2;
+        }
+
+        if (diff_y > sub_y) {
+            return diff_x + diff_y - sub_y;
         }
 
         return diff_x;
     }
-}
-
-int main()
-{
-    using namespace Game;
-    Coord<int> c1(4, 0), c2(5, 4), range(10, 10);
-    std::cout << dist(range, c1, c2) << std::endl;
 }
