@@ -1,17 +1,18 @@
 #include <algorithm>
 #include <vector>
+#include <iostream>
+
+// не робит с листом и read-only T (параша ебаная)
 
 template <class T, class K>
 K myremove(T abegin, T aend, K vbegin, K vend)
 {
-    std::vector<typename T::value_type> copy(abegin, aend);
-    std::sort(copy.begin(), copy.end());
-    auto it_end = std::unique(copy.begin(), copy.end());
-    copy.resize(std::distance(copy.begin(), it_end));
+    std::sort(abegin, aend);
+    aend = std::unique(abegin, aend);
 
     int off = 0;
 
-    for (auto it = copy.begin(); it != copy.end(); ++it) {
+    for (auto it = abegin; it != aend; ++it) {
         auto el_it = vbegin;
         int i;
 

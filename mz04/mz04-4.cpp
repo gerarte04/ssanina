@@ -19,7 +19,7 @@ public:
 
 int main()
 {
-    static constexpr int PROP = 10;
+    static constexpr int PROP = 10, FRAC_LEN = 10;
 
     std::vector<double> v;
     double x;
@@ -33,7 +33,7 @@ int main()
 
     away += (v.size() - 2 * away) / PROP;
     Eval mean = std::for_each(v.begin() + away, v.end() - away, Eval());
-    std::cout << std::fixed << std::showpoint << std::setprecision(10) << mean.get();
+    std::cout << std::fixed << std::showpoint << std::setprecision(FRAC_LEN) << mean.get();
 
     return 0;
 }
