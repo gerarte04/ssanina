@@ -5,7 +5,7 @@
 class Figure
 {
 public:
-    virtual bool equals(Figure*) const = 0;
+    virtual bool equals(Figure *const) const = 0;
     virtual ~Figure() { }
 };
 
@@ -14,7 +14,7 @@ class Rectangle : public Figure
     int a{}, b{};
 public:
     Rectangle(int a, int b) : a(a), b(b) { }
-    bool equals(Figure *f) const override
+    bool equals(Figure *const f) const override
     {
         Rectangle *r = dynamic_cast<Rectangle*>(f);
         return r && a == r->a && b == r->b;
@@ -26,7 +26,7 @@ class Triangle : public Figure
     int a{}, b{}, c{};
 public:
     Triangle(int a, int b, int c) : a(a), b(b), c(c) { }
-    bool equals(Figure *f) const override
+    bool equals(Figure *const f) const override
     {
         Triangle *t = dynamic_cast<Triangle*>(f);
         return t && a == t->a && b == t->b && c == t->c;
