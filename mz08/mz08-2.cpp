@@ -1,4 +1,3 @@
-#include <exception>
 #include <iostream>
 
 class Result
@@ -13,15 +12,13 @@ void func(long a, long b, unsigned int k)
 {
     if (k == 0) {
         throw Result(a + b);
-    }
-    if (b == 1) {
+    } else if (b == 1) {
         throw Result(a);
     }
 
     try {
         func(a, b - 1, k);
-    }
-    catch (const Result &res) {
+    } catch (const Result &res) {
         func(a, res.get(), k - 1);
     }
 }
@@ -34,8 +31,7 @@ int main()
     while (std::cin >> a >> b >> k) {
         try {
             func(a, b, k);
-        }
-        catch (const Result &res) {
+        } catch (const Result &res) {
             std::cout << res.get() << std::endl;
         }
     }

@@ -19,7 +19,6 @@ int main()
             
             if (cur == alphabets.end()) {
                 belongs = false;
-                break;
             }
         }
 
