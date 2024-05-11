@@ -1,60 +1,53 @@
 #include <iostream>
+#include <string>
 
-// S = aSb | a0A1b | a0Ab1
-// A = 0A1 | 01
+/*
+S -> aSb | a0A1b
+A -> 0A1 | 01
+1b -> b1
+*/
 
-// хуета помойная
+// параша, какую поискать надо
 
-char c;
-void gc()
+bool is_belong(const std::string &s)
 {
-    if (!(std::cin >> c)) {
-        c = '\0';
+    int cnt_a = 0, cnt_0 = 0;
+    auto it = s.begin();
+
+    for (; *it == 'a'; ++it) {
+        ++cnt_a;
     }
-}
 
-void A()
-{
-    if (c == '0') {
-        gc();
-        if (c == '1') { gc(); }
-        else {
-            A();
-            if (c == '1') { gc(); }
-            else { throw c; }
+    for (; *it == '0'; ++it) {
+        ++cnt_0;
+    }
+
+    if (!cnt_a || cnt_0 <= 1) {
+        return false;
+    }
+
+    int cnt_1 = 0, cnt_b = 0;
+
+    for (; it != s.end(); ++it) {
+        if (*it == '1') {
+            ++cnt_1;
+        } else if (*it == 'b') {
+            ++cnt_b;
+        } else {
+            return false;
         }
-    } else { throw c; }
-}
+    }
 
-void S()
-{
-    if (c != 'a') { throw c; }
-    gc();
-    if (c == 'a') {
-        S();
-        if (c == 'b') { gc(); }
-        else { throw c; }
-    } else if (c == '0') {
-        gc(); A();
-        if (c == '1') {
-            gc();
-            if (c == 'b') { gc(); }
-            else { throw c; }
-        } else if (c == 'b') {
-            gc();
-            if (c == '1') { gc(); }
-            else { throw c; }
-        } else { throw c; }
-    } else { throw c; }
+    return cnt_a == cnt_b && cnt_0 == cnt_1;
 }
 
 int main()
 {
-    try {
-        gc(); S();
-        if (c) { throw c; }
-        std::cout << 1 << std::endl;
-    } catch (char) { std::cout << 0 << std::endl; }
+    std::string s;
+    
+    while (std::cin >> s) {
+        std::cout << is_belong(s) << std::endl;
+    }
 
     return 0;
 }

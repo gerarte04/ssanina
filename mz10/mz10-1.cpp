@@ -1,146 +1,136 @@
 #include <iostream>
 #include <string>
-#include <utility>
-
-// хуйня
+#include <vector>
 
 bool is_term(char c)
 {
-    return !(c >= 'A' && c <= 'Z');
+    return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
 }
 
-bool is_eps(std::string s)
+bool is_nterm(char c)
 {
-    return s.length() == 1 && s[0] == '_';
+    return c >= 'A' && c <= 'Z';
 }
 
-std::pair<bool, bool> check_left(std::string l, std::string r)
+bool is_left(const std::string &s)
 {
-    if (l.length() != 1 || is_term(l[0])) {
-        return std::make_pair(false, false);
-    } else if (l[0] == 'S' && r.length() == 1 && !is_eps(r)) {
-        if (r[0] == 'A') {
-            return std::make_pair(true, true);
+    if (s.length() == 1 && s[0] == '_') {
+        return true;
+    }
+
+    for (auto it = s.begin() + 1; it != s.end(); ++it) {
+        if (is_nterm(*it)) {
+            return false;
         }
+    }
 
-        return std::make_pair(true, false);
-    } else if (is_term(r[0])) {
-        if (is_eps(r)) {
-            if (l[0] == 'S') {
-                return std::make_pair(true, true);
+    return true;
+}
+
+bool is_right(const std::string &s)
+{
+    if (s.length() == 1 && s[0] == '_') {
+        return true;
+    }
+
+    auto last = s.end() - 1;
+
+    for (auto it = s.begin(); it != last; ++it) {
+        if (is_nterm(*it)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool is_left_regular(const std::vector<std::pair<std::string, std::string>> &rules)
+{
+    for (const auto &[l, r] : rules) {
+        if (!is_left(r)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool is_right_regular(const std::vector<std::pair<std::string, std::string>> &rules)
+{
+    for (const auto &[l, r] : rules) {
+        if (!is_right(r)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool is_automatic(const std::vector<std::pair<std::string, std::string>> &rules)
+{
+    bool has_ext_right = false;
+    int cnt_s_right = 0;
+
+    for (const auto &[l, r] : rules) {
+        if (l[0] == 'S' && r.length() == 1 && (r[0] == '_' || r[0] == 'A')) {
+            has_ext_right = true;
+        } else {
+            int cnt_term = 0;
+            
+            for (const char &c : r) {
+                cnt_term += is_term(c);
+
+                if (c == 'S') {
+                    ++cnt_s_right;
+                }
             }
 
-            return std::make_pair(true, false);
-        }
-
-        if (r.length() == 1) {
-            return std::make_pair(true, true);
-        }
-    } else if (r.length() == 1) {
-        if (is_term(r[0])) {
-            return std::make_pair(true, true);
-        }
-
-        return std::make_pair(false, false);
-    }
-
-    for (int i = 1; i < (int) r.length(); i++) {
-        if (!is_term(r[i])) {
-            return std::make_pair(false, false);
+            if (cnt_term != 1) {
+                return false;
+            }
         }
     }
 
-    if (r.length() == 2 && !is_term(r[0])) {
-        return std::make_pair(true, true);
-    }
-
-    return std::make_pair(true, false);
+    return !has_ext_right || (has_ext_right && !cnt_s_right);
 }
 
-std::pair<bool, bool> check_right(std::string l, std::string r)
+bool is_not_shortening(const std::vector<std::pair<std::string, std::string>> &rules)
 {
-    if (l.length() != 1 || is_term(l[0])) {
-        return std::make_pair(false, false);
-    } else if (l[0] == 'S' && r.length() == 1 && !is_eps(r)) {
-        if (r[0] == 'A') {
-            return std::make_pair(true, true);
-        }
-
-        return std::make_pair(true, false);
-    } else if (is_eps(r)) {
-        if (l[0] == 'S') {
-            return std::make_pair(true, true);
-        }
-
-        return std::make_pair(true, false);
-    } else if (r.length() == 1) {
-        if (is_term(r[0])) {
-            return std::make_pair(true, true);
-        }
-
-        return std::make_pair(false, false);
-    }
-
-    for (int i = 0; i < (int) r.length() - 1; i++) {
-        if (!is_term(r[i])) {
-            return std::make_pair(false, false);
+    for (const auto &[l, r] : rules) {
+        if (r[0] == '_') {
+            return false;
         }
     }
 
-    if (r.length() == 2 && !is_term(r[1])) {
-        return std::make_pair(true, true);
-    }
-
-    return std::make_pair(true, false);
+    return true;
 }
 
 int main()
 {
+    std::vector<std::pair<std::string, std::string>> rules;
     std::string l, r;
-    bool is_right = true, is_left = true, is_laut = true, is_raut = true;
 
     while (std::cin >> l >> r) {
-        if (l.length() > r.length()) {
-            std::cout << 2 << std::endl;
-            return 0;
-        }
-
-        auto pl = check_left(l, r), pr = check_right(l, r);
-
-        if (!pl.first) {
-            is_left = false;
-        }
-
-        if (!pl.second) {
-            is_laut = false;
-        }
-
-        if (!pr.first) {
-            is_right = false;
-        }
-
-        if (!pr.second) {
-            is_raut = false;
-        }
+        rules.push_back(std::make_pair(l, r));
     }
 
-    if (is_laut) {
-        std::cout << 311 << std::endl;
-        return 0;
-    } else if (is_left) {
-        std::cout << 31 << std::endl;
-        return 0;
+    if (is_left_regular(rules)) {
+        if (is_automatic(rules)) {
+            std::cout << 311 << std::endl;
+        } else {
+            std::cout << 31 << std::endl;
+        }
+    } else if (is_right_regular(rules)) {
+        if (is_automatic(rules)) {
+            std::cout << 321 << std::endl;
+        } else {
+            std::cout << 32 << std::endl;
+        }
+    } else if (is_not_shortening(rules)) {
+        std::cout << 21 << std::endl;
+    } else {
+        std::cout << 2 << std::endl;
     }
-
-    if (is_raut) {
-        std::cout << 321 << std::endl;
-        return 0;
-    } else if (is_right) {
-        std::cout << 32 << std::endl;
-        return 0;
-    }
-
-    std::cout << 21 << std::endl;
 
     return 0;
 }

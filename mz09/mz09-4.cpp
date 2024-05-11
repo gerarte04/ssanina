@@ -1,48 +1,43 @@
 #include <iostream>
 
 /*
-S -> A
-A -> aAd | aBd
+S -> aAd
+A -> aAd | bBc
 B -> bBc | eps
 */
 
-void pc(char a)
+void pc(char c)
 {
-    if (a) {
-        std::cout << a;
-    }
+    std::cout << c;
 }
 
-void B(int k)
+void B(int i)
 {
-    if (k >= 2) {
+    if (i > 0) {
         pc('b');
-        B(k - 2);
+        B(i - 2);
         pc('c');
     }
 }
 
-void S(int k, int ka)
+void A(int k, int i)
 {
-    if (ka == 2) {
+    if (k == i) {
+        pc('b');
+        B(i - 2);
+        pc('c');
+    } else {
         pc('a');
-        B(2);
+        A(k - 2, i);
         pc('d');
     }
-    else if (ka > 2) {
-        pc('a');
-        S(k, ka - 2);
-        pc('d');
-        if (k - ka == 2) {
-            pc('\n');
-        }
-        pc('a');
-        B(ka);
-        pc('d');
-        if (k - ka == 2) {
-            pc('\n');
-        }
-    }
+}
+
+void S(int k, int i)
+{
+    pc('a');
+    A(k - 2, i);
+    pc('d');
 }
 
 int main()
@@ -50,7 +45,12 @@ int main()
     int k;
     std::cin >> k;
 
-    S(k, k - 2);
+    if (k >= 4 && !(k & 1)) {
+        for (int i = 2; i < k; i += 2) {
+            S(k, i);
+            std::cout << std::endl;
+        }
+    }
 
     return 0;
 }
