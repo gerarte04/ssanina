@@ -1,44 +1,34 @@
 #include <iostream>
 #include <string>
 
-/*
-S -> aSb | a0A1b
-A -> 0A1 | 01
-1b -> b1
-*/
-
-// параша, какую поискать надо
-
 bool is_belong(const std::string &s)
 {
     int cnt_a = 0, cnt_0 = 0;
     auto it = s.begin();
 
-    for (; *it == 'a'; ++it) {
+    for (; it != s.end() && *it == 'a'; ++it) {
         ++cnt_a;
     }
 
-    for (; *it == '0'; ++it) {
+    for (; it != s.end() && *it == '0'; ++it) {
         ++cnt_0;
     }
 
-    if (!cnt_a || cnt_0 <= 1) {
+    if (!cnt_a || !cnt_0) {
         return false;
     }
 
     int cnt_1 = 0, cnt_b = 0;
 
-    for (; it != s.end(); ++it) {
-        if (*it == '1') {
-            ++cnt_1;
-        } else if (*it == 'b') {
-            ++cnt_b;
-        } else {
-            return false;
-        }
+    for (; it != s.end() && *it == 'b'; ++it) {
+        ++cnt_b;
     }
 
-    return cnt_a == cnt_b && cnt_0 == cnt_1;
+    for (; it != s.end() && *it == '1'; ++it) {
+        ++cnt_1;
+    }
+
+    return it == s.end() && cnt_a == cnt_b && cnt_0 == cnt_1;
 }
 
 int main()
