@@ -1,15 +1,13 @@
-#include <functional>
-#include <future>
 #include <thread>
-#include <iostream>
 
-// very weird (not working)
+// скорее всего, неверная реализация, но pending review
 
-template <typename Res, typename... Args>
-void async_launch(std::function<Res(Args...)> func, std::function<void(Res)> call, Args... args)
+template <typename F1, typename F2, typename... Args>
+void async_launch(F1&& func, F2&& call, Args&&... args)
 {
-    std::packaged_task<void(std::function<Res(Args...)>, std::function<void(Res)>, Args...)> task([](std::function<Res(Args...)> func, std::function<void(Res)> call, Args... args) {
+    auto exec = [&func, &call, &args...]() {
         call(func(args...));
-        });
-    task(func, call, args...);
+    };
+    
+    std::jthread thr(exec);
 }
